@@ -5,8 +5,8 @@
 	<groupId>chenyunh</groupId>
 	<artifactId>learn</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>esearch</name>
-	<url>http://maven.apache.org</url>
+	<name>learn</name>
+	<url>https://github.com/553036892</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -118,17 +118,6 @@
 				</executions>
 			</plugin>
 
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 </project>
