@@ -337,7 +337,7 @@ public class Solution {
 		}
 		System.out.println(len + " " +num);
 	}
-	public static void main(String[] args) throws IOException {
+/*	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		Solution s = new Solution();
 		//		FileReader reader = new FileReStrader("C:\\Users\\esensoft\\Downloads\\107.in");
@@ -362,5 +362,5 @@ public class Solution {
 			count(i);
 		}
 //		count("处置固定资产、无形资产和其他长期资产收回的现金净额");
-	}
+	}*/
 }

@@ -217,7 +217,7 @@ public class AVLNode {
 		return lastFS(this, result);
 	}
 
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		AVLNode tree = new AVLNode(3);
 		System.out.println(tree.midFS());
 		tree = tree.put(2);
@@ -257,6 +257,6 @@ public class AVLNode {
 		tree.remove(8).remove(14);
 		System.out.println(tree.remove(4).midFS());
 		
-	}
+	}*/
 
 }
