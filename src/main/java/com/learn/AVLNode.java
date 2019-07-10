@@ -1,13 +1,13 @@
-package com.learn;
+/*package com.learn;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+*//**
  * avl树实现
  * @author chenyunh
  * @since 2019年4月23日
- */
+ *//*
 public class AVLNode {
 	public int key;
 
@@ -139,10 +139,10 @@ public class AVLNode {
 		return remove(this, key);
 	}
 
-	/**
+	*//**
 	 * 左左旋转
 	 * @param tree
-	 */
+	 *//*
 	public static AVLNode LLrotate(AVLNode tree) {
 		AVLNode left = tree.left;
 		tree.left = left.right;
@@ -152,10 +152,10 @@ public class AVLNode {
 		return left;
 	}
 
-	/**
+	*//**
 	 * 右右旋转
 	 * @param tree
-	 */
+	 *//*
 	public static AVLNode RRrotate(AVLNode tree) {
 		AVLNode right = tree.right;
 		tree.right = right.left;
@@ -217,7 +217,7 @@ public class AVLNode {
 		return lastFS(this, result);
 	}
 
-/*	public static void main(String[] args) {
+	public static void main(String[] args) {
 		AVLNode tree = new AVLNode(3);
 		System.out.println(tree.midFS());
 		tree = tree.put(2);
@@ -257,6 +257,7 @@ public class AVLNode {
 		tree.remove(8).remove(14);
 		System.out.println(tree.remove(4).midFS());
 		
-	}*/
+	}
 
 }
+*/

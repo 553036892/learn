@@ -1,12 +1,13 @@
-package com.learn;
+package com.learn.mapreduce;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
-import org.apache.poi.POIXMLDocument;
 import org.apache.poi.hslf.extractor.PowerPointExtractor;
 import org.apache.poi.hssf.extractor.ExcelExtractor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -20,6 +21,18 @@ import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 public class ParseText {
+	public static HashSet<String> types;
+	static{
+		types = new HashSet<>();
+		types.add("doc");
+		types.add("docx");
+		types.add("xls");
+		types.add("xlsx");
+		types.add("ppt");
+		types.add("pptx");
+		types.add("pdf");
+		types.add("txt");
+	}
 
 	// 判断文档类型，调用不同的解析方法
 	public static String parse(byte[] buffer, String suffix) {
@@ -54,6 +67,10 @@ public class ParseText {
 		}
 
 		return text.replaceAll("\\s*", "");
+	}
+	
+	public static boolean hastType(String type) {
+		return types.contains(type);
 	}
 
 	// 读取Word97-2003的全部内容 doc

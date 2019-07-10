@@ -1,5 +1,4 @@
-package com.learn;
-import java.io.IOException;
+/*package com.learn;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -108,7 +107,7 @@ public class Solution {
 		// Write your code here
 	}
 
-	/**
+	*//**
 	 * 139. 最接近零的子数组和
 	
 		 给定一个整数数组，找到一个和最接近于零的子数组。返回第一个和最右一个指数。你的代码应该返回满足要求的子数组的起始位置和结束位置
@@ -120,7 +119,7 @@ public class Solution {
 		O(nlogn)的时间复杂度
 	 * @param nums
 	 * @return
-	 */
+	 *//*
 	public int[] subarraySumClosest(int[] nums) {
 		// write your code here
 		int[] results = new int[2];
@@ -186,13 +185,13 @@ public class Solution {
 		return sb.toString();
 	}
 
-	/*
+	
 	 * @param str: A string
 	 * @return: dcodes a single string to a list of strings
-	 */
+	 
 	public List<String> decode(String str) {
 		// write your code here
-		List<String> list = new ArrayList();
+		List<String> list = new ArrayList<>();
 		char[] sc = str.toCharArray();
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
@@ -240,7 +239,6 @@ public class Solution {
 		int[] ois = Arrays.copyOf(is, is.length);
 		Arrays.sort(is);
 		int n = is.length - 1;
-		boolean has = false;
 		int first = -1;
 		int sencond = -1;
 		for (int i = 0; i < is.length; i++) {
@@ -278,11 +276,11 @@ public class Solution {
 		}
 	}
 
-	/**
+	*//**
 	 * KMP的next数组
 	 * @param str
 	 * @return
-	 */
+	 *//*
 	public static int[] nextIndex(String str) {
 		int[] next = new int[str.length() + 1];
 		next[0] = -1;
@@ -337,7 +335,7 @@ public class Solution {
 		}
 		System.out.println(len + " " +num);
 	}
-/*	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		Solution s = new Solution();
 		//		FileReader reader = new FileReStrader("C:\\Users\\esensoft\\Downloads\\107.in");
@@ -362,5 +360,6 @@ public class Solution {
 			count(i);
 		}
 //		count("处置固定资产、无形资产和其他长期资产收回的现金净额");
-	}*/
+	}
 }
+*/
