@@ -1,6 +1,10 @@
 package com.learn.mapreduce;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
@@ -13,23 +17,32 @@ public class FilesReducer extends Reducer<Text, MyText, NullWritable, Text> {
 	protected void reduce(Text key, Iterable<MyText> values, Reducer<Text, MyText, NullWritable, Text>.Context context)
 			throws IOException, InterruptedException {
 		System.out.println("reducer");
-		System.out.println("key:"+key);
-		String content = "";
-		String lineSeparator = System.lineSeparator();
-		for (MyText myText : values) {
-			content = lineSeparator + myText.getValue() + content;
+		System.out.println("key:" + key);
+		try(ByteArrayOutputStream stm = new ByteArrayOutputStream()){
+			ArrayList<byte[]> list = new ArrayList<>();
+			for (MyText myText : values) {
+				list.add(myText.getValue());
+			}
+			Collections.reverse(list);
+			byte[] last = list.remove(list.size() - 1);
+			for (byte[] value : list) {
+				stm.write(value);
+				stm.write(System.lineSeparator().getBytes());
+			}
+			stm.write(last);
+			JSONObject json = new JSONObject();
+			String path = key.toString();
+			String type = path.substring(path.lastIndexOf(".") + 1, path.length());
+			json.put("type", type);
+			byte[] byteArray = stm.toByteArray();
+			stm.close();
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArray);
+			String parse = ParseText.parse(byteArrayInputStream, type);
+			System.out.println("parse:" + parse);
+			json.put("path", path);
+			json.put("content", parse);
+			System.out.println("path:"+path);
+			//		context.write(NullWritable.get(), new Text(json.toString()));
 		}
-		content = content.substring(lineSeparator.length() + 1,content.length());
-		JSONObject json = new JSONObject();
-		String path = key.toString();
-		String type = path.substring(path.lastIndexOf(".") + 1, path.length());
-		json.put("type", type);
-		System.out.println("content:"+content);
-		String parse = ParseText.parse(content.getBytes("UTF-8"), type);
-		System.out.println("parse:"+parse);
-		json.put("content", parse);
-		json.put("path", path);
-		System.out.println("json:" + json.toString());
-//		context.write(NullWritable.get(), new Text(json.toString()));
 	}
 }

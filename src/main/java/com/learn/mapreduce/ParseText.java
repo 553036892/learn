@@ -1,6 +1,6 @@
 package com.learn.mapreduce;
 
-import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -22,7 +22,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 public class ParseText {
 	public static HashSet<String> types;
-	static{
+	static {
 		types = new HashSet<>();
 		types.add("doc");
 		types.add("docx");
@@ -35,32 +35,32 @@ public class ParseText {
 	}
 
 	// 判断文档类型，调用不同的解析方法
-	public static String parse(byte[] buffer, String suffix) {
+	public static String parse(InputStream byteArrayInputStream, String suffix) {
 		String text = "";
 		switch (suffix) {
 			case "doc":
-				text = getTextFromWord(buffer);
+				text = getTextFromWord(byteArrayInputStream);
 				break;
 			case "docx":
-				text = getTextFromWord2007(buffer);
+				text = getTextFromWord2007(byteArrayInputStream);
 				break;
 			case "xls":
-				text = getTextFromExcel(buffer);
+				text = getTextFromExcel(byteArrayInputStream);
 				break;
 			case "xlsx":
-				text = getTextFromExcel2007(buffer);
+				text = getTextFromExcel2007(byteArrayInputStream);
 				break;
 			case "ppt":
-				text = getTextFromPPT(buffer);
+				text = getTextFromPPT(byteArrayInputStream);
 				break;
 			case "pptx":
-				text = getTextFromPPT2007(buffer);
+				text = getTextFromPPT2007(byteArrayInputStream);
 				break;
 			case "pdf":
-				text = getTextFormPDF(buffer);
+				text = getTextFormPDF(byteArrayInputStream);
 				break;
 			case "txt":
-				text = getTextFormTxt(buffer);
+				text = getTextFormTxt(byteArrayInputStream);
 				break;
 			default:
 				System.out.println("不支持解析的文档类型");
@@ -68,19 +68,18 @@ public class ParseText {
 
 		return text.replaceAll("\\s*", "");
 	}
-	
+
 	public static boolean hastType(String type) {
 		return types.contains(type);
 	}
 
 	// 读取Word97-2003的全部内容 doc
-	private static String getTextFromWord(byte[] file) {
+	private static String getTextFromWord(InputStream stm) {
 		String text = "";
 		InputStream fis = null;
 		WordExtractor ex = null;
 		try {
 			// word 2003： 图片不会被读取
-			fis = new ByteArrayInputStream(file);
 			ex = new WordExtractor(fis);
 			text = ex.getText();
 			ex.close();
@@ -92,14 +91,12 @@ public class ParseText {
 	}
 
 	// 读取Word2007+的全部内容 docx
-	private static String getTextFromWord2007(byte[] file) {
+	private static String getTextFromWord2007(InputStream stm) {
 		String text = "";
-		InputStream fis = null;
 		XWPFDocument doc = null;
 		XWPFWordExtractor workbook = null;
 		try {
-			fis = new ByteArrayInputStream(file);
-			doc = new XWPFDocument(fis);
+			doc = new XWPFDocument(stm);
 			workbook = new XWPFWordExtractor(doc);
 			text = workbook.getText();
 			workbook.close();
@@ -111,13 +108,11 @@ public class ParseText {
 	}
 
 	// 读取Excel97-2003的全部内容 xls
-	private static String getTextFromExcel(byte[] file) {
-		InputStream is = null;
+	private static String getTextFromExcel(InputStream stm) {
 		HSSFWorkbook wb = null;
 		String text = "";
 		try {
-			is = new ByteArrayInputStream(file);
-			wb = new HSSFWorkbook(new POIFSFileSystem(is));
+			wb = new HSSFWorkbook(new POIFSFileSystem(stm));
 			ExcelExtractor extractor = new ExcelExtractor(wb);
 			extractor.setFormulasNotResults(false);
 			extractor.setIncludeSheetNames(false);
@@ -130,13 +125,11 @@ public class ParseText {
 	}
 
 	// 读取Excel2007+的全部内容 xlsx
-	private static String getTextFromExcel2007(byte[] file) {
-		InputStream is = null;
+	private static String getTextFromExcel2007(InputStream stm) {
 		XSSFWorkbook workBook = null;
 		String text = "";
 		try {
-			is = new ByteArrayInputStream(file);
-			workBook = new XSSFWorkbook(is);
+			workBook = new XSSFWorkbook(stm);
 			XSSFExcelExtractor extractor = new XSSFExcelExtractor(workBook);
 			extractor.setIncludeSheetNames(false);
 			text = extractor.getText();
@@ -148,14 +141,12 @@ public class ParseText {
 	}
 
 	// 读取Powerpoint97-2003的全部内容 ppt
-	private static String getTextFromPPT(byte[] file) {
+	private static String getTextFromPPT(InputStream stm) {
 		String text = "";
-		InputStream fis = null;
 		PowerPointExtractor ex = null;
 		try {
 			// word 2003： 图片不会被读取
-			fis = new ByteArrayInputStream(file);
-			ex = new PowerPointExtractor(fis);
+			ex = new PowerPointExtractor(stm);
 			text = ex.getText();
 			ex.close();
 		} catch (Exception e) {
@@ -166,13 +157,11 @@ public class ParseText {
 	}
 
 	// 抽取幻灯片2007+全部内容 pptx
-	private static String getTextFromPPT2007(byte[] file) {
-		InputStream is = null;
+	private static String getTextFromPPT2007(InputStream stm) {
 		XMLSlideShow slide = null;
 		String text = "";
 		try {
-			is = new ByteArrayInputStream(file);
-			slide = new XMLSlideShow(is);
+			slide = new XMLSlideShow(stm);
 			XSLFPowerPointExtractor extractor = new XSLFPowerPointExtractor(slide);
 			text = extractor.getText();
 			extractor.close();
@@ -183,13 +172,11 @@ public class ParseText {
 	}
 
 	// 读取pdf文件全部内容 pdf
-	private static String getTextFormPDF(byte[] file) {
+	private static String getTextFormPDF(InputStream stm) {
 		String text = "";
 		PDDocument pdfdoc = null;
-		InputStream is = null;
 		try {
-			is = new ByteArrayInputStream(file);
-			pdfdoc = PDDocument.load(is);
+			pdfdoc = PDDocument.load(stm);
 			PDFTextStripper stripper = new PDFTextStripper();
 			text = stripper.getText(pdfdoc);
 
@@ -209,11 +196,15 @@ public class ParseText {
 	}
 
 	// 读取txt文件全部内容 txt
-	private static String getTextFormTxt(byte[] file) {
+	private static String getTextFormTxt(InputStream stm) {
 		String text = "";
 		try {
-			String encoding = get_charset(file);
-			text = new String(file, encoding);
+			ByteArrayOutputStream ostm = new ByteArrayOutputStream();
+			byte[] buf = new byte[1];
+			while (stm.read(buf) > 0) {
+				ostm.write(buf);
+			}
+			text = new String(ostm.toByteArray());
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (IOException e1) {
@@ -223,15 +214,13 @@ public class ParseText {
 	}
 
 	// 获得txt文件编码方式
-	private static String get_charset(byte[] file) throws IOException {
+	private static String get_charset(InputStream stm) throws IOException {
 		String charset = "GBK";
 		byte[] first3Bytes = new byte[3];
-		InputStream bis = null;
 		try {
 			boolean checked = false;
-			bis = new ByteArrayInputStream(file);
-			bis.mark(0);
-			int read = bis.read(first3Bytes, 0, 3);
+			stm.mark(0);
+			int read = stm.read(first3Bytes, 0, 3);
 			if (read == -1)
 				return charset;
 			if (first3Bytes[0] == (byte) 0xFF && first3Bytes[1] == (byte) 0xFE) {
@@ -244,24 +233,24 @@ public class ParseText {
 				charset = "UTF-8";
 				checked = true;
 			}
-			bis.reset();
+			stm.reset();
 			if (!checked) {
-				while ((read = bis.read()) != -1) {
+				while ((read = stm.read()) != -1) {
 					if (read >= 0xF0)
 						break;
 					if (0x80 <= read && read <= 0xBF) // 单独出现BF以下的，也算是GBK
 						break;
 					if (0xC0 <= read && read <= 0xDF) {
-						read = bis.read();
+						read = stm.read();
 						if (0x80 <= read && read <= 0xBF) // 双字节 (0xC0 - 0xDF)
 							// (0x80 - 0xBF),也可能在GB编码内
 							continue;
 						else
 							break;
 					} else if (0xE0 <= read && read <= 0xEF) {// 也有可能出错，但是几率较小
-						read = bis.read();
+						read = stm.read();
 						if (0x80 <= read && read <= 0xBF) {
-							read = bis.read();
+							read = stm.read();
 							if (0x80 <= read && read <= 0xBF) {
 								charset = "UTF-8";
 								break;
@@ -275,11 +264,25 @@ public class ParseText {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (bis != null) {
-				bis.close();
+			if (stm != null) {
+				stm.close();
 			}
 		}
 		return charset;
 	}
+//			public static void main(String[] args) throws IOException {
+//				File s = new File("C:\\Users\\esensoft\\Desktop\\word.docx");
+//				String text = "";
+//				XWPFDocument doc = null;
+//				XWPFWordExtractor workbook = null;
+//				InputStream resourceAsStream = new FileInputStream(s);
+//				doc = new XWPFDocument(resourceAsStream);
+//				workbook = new XWPFWordExtractor(doc);
+//				text = workbook.getText();
+//				workbook.close();
+//				resourceAsStream.close();
+//				
+//				System.out.println(text);
+//			}
 
 }

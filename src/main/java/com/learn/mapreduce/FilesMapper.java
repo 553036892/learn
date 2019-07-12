@@ -17,7 +17,7 @@ public class FilesMapper extends Mapper<LongWritable, Text, Text, MyText> {
 		String pathstr = path.toString();
 		if (pathstr.indexOf(".") > 0
 				&& ParseText.hastType(pathstr.substring(pathstr.lastIndexOf(".") + 1, pathstr.length()))) {
-			MyText myValue = new MyText(key.get(), pathstr, value.toString());
+			MyText myValue = new MyText(key.get(), pathstr, value.copyBytes());
 			System.out.println("mapper");
 			System.out.println("key:" + myValue.getKey());
 			System.out.println("value:" + value);
